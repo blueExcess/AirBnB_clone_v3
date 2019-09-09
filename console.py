@@ -13,9 +13,6 @@ from models.state import State
 from models.user import User
 import shlex  # for splitting the line along spaces except in double quotes
 
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
-
 
 class HBNBCommand(cmd.Cmd):
     """ HBNH console """
@@ -60,9 +57,9 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return False
-        if args[0] in classes:
+        if args[0] in models.classes:
             new_dict = self._key_value_parser(args[1:])
-            instance = classes[args[0]](**new_dict)
+            instance = models.classes[args[0]](**new_dict)
         else:
             print("** class doesn't exist **")
             return False
@@ -75,7 +72,7 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
             return False
-        if args[0] in classes:
+        if args[0] in models.classes:
             if len(args) > 1:
                 key = args[0] + "." + args[1]
                 if key in models.storage.all():
@@ -92,7 +89,7 @@ class HBNBCommand(cmd.Cmd):
         args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] in classes:
+        elif args[0] in models.classes:
             if len(args) > 1:
                 key = args[0] + "." + args[1]
                 if key in models.storage.all():
@@ -111,8 +108,8 @@ class HBNBCommand(cmd.Cmd):
         obj_list = []
         if len(args) == 0:
             obj_dict = models.storage.all()
-        elif args[0] in classes:
-            obj_dict = models.storage.all(classes[args[0]])
+        elif args[0] in models.classes:
+            obj_dict = models.storage.all(models.classes[args[0]])
         else:
             print("** class doesn't exist **")
             return False
@@ -130,7 +127,7 @@ class HBNBCommand(cmd.Cmd):
         floats = ["latitude", "longitude"]
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] in classes:
+        elif args[0] in models.classes:
             if len(args) > 1:
                 k = args[0] + "." + args[1]
                 if k in models.storage.all():

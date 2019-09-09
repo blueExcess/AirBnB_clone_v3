@@ -16,9 +16,6 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-classes = {"Amenity": Amenity, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
-
 
 class DBStorage:
     """interaacts with the MySQL database"""
@@ -43,9 +40,9 @@ class DBStorage:
     def all(self, cls=None):
         """query on the current database session"""
         new_dict = {}
-        for clss in classes:
-            if cls is None or cls is classes[clss] or cls is clss:
-                objs = self.__session.query(classes[clss]).all()
+        for clss in models.classes:
+            if cls is None or cls is models.classes[clss] or cls is clss:
+                objs = self.__session.query(models.classes[clss]).all()
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
@@ -78,16 +75,16 @@ class DBStorage:
     def get(self, cls, id):
         """retrieve a single object from storage"""
         if not isinstance(cls, type):
-            cls = classes[cls]
+            cls = models.classes[cls]
         return self.__session.query(cls).filter(cls.id == str(id)).first()
 
     def count(self, cls=None):
         """ Count number of objects in storage."""
         if cls is not None:
-            return self.__session.query(classes[cls]).count()
+            return self.__session.query(models.classes[cls]).count()
         else:
             return sum(
                 self.__session.query(cls).count()
-                for cls in classes.values()
+                for cls in models.classes.values()
             )
         return self.__session.query(cls).filter(cls.id == str(id)).first()
