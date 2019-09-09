@@ -19,6 +19,12 @@ def closeStorageAfterRequest(error):
     storage.reload()
 
 
+@app.errorhandler(404)
+def error404(error):
+    """Use a JSON rather than HTML response when a URL is not found"""
+    return '{"error": "Not found"}'
+
+
 if __name__ == '__main__':
     app.run(
         host=getenv('HBNB_API_HOST', '0.0.0.0'),
