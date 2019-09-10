@@ -49,7 +49,7 @@ class DBStorage:
         if isinstance(cls, type):
             cls = cls.__name__
         return {
-            cls + '.' + obj.id
+            cls + '.' + obj.id: obj
             for obj in self.__session.query(models.classes[cls])
         }
 
