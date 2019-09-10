@@ -39,15 +39,19 @@ class DBStorage:
 
     def all(self, cls=None):
         """query on the current database session"""
-        new_dict = {}
-        for clss in models.classes:
-            if cls is None or cls is models.classes[clss] or cls is clss:
-                if issubclass(models.classes[clss], Base):
-                    objs = self.__session.query(models.classes[clss]).all()
-                    for obj in objs:
-                        key = obj.__class__.__name__ + '.' + obj.id
-                        new_dict[key] = obj
-        return (new_dict)
+        if cls is None:
+            ret = {}
+            for name, cls in models.classes.items():
+                if issubclass(cls, Base):
+                    for record in self.__session.query(cls):
+                        ret[name + '.' + record.id] = record
+            return ret
+        if isinstance(cls, type):
+            cls = cls.__name__
+        return {
+            cls + '.' + obj.id
+            for obj in self.__session.query(models.classes[cls])
+        }
 
     def new(self, obj):
         """add the object to the current database session"""
