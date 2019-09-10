@@ -87,5 +87,5 @@ class DBStorage:
             return sum(
                 self.__session.query(cls).count()
                 for cls in models.classes.values()
+                if issubclass(cls, Base)
             )
-        return self.__session.query(cls).filter(cls.id == str(id)).first()
