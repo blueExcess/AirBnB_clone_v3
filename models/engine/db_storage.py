@@ -42,10 +42,11 @@ class DBStorage:
         new_dict = {}
         for clss in models.classes:
             if cls is None or cls is models.classes[clss] or cls is clss:
-                objs = self.__session.query(models.classes[clss]).all()
-                for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
-                    new_dict[key] = obj
+                if issubclass(models.classes[clss], Base):
+                    objs = self.__session.query(models.classes[clss]).all()
+                    for obj in objs:
+                        key = obj.__class__.__name__ + '.' + obj.id
+                        new_dict[key] = obj
         return (new_dict)
 
     def new(self, obj):
