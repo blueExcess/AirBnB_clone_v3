@@ -26,14 +26,18 @@ def get_state_id(state_id):
 def delete_state(state_id):
     """ delete state matching given ID. """
     temp = storage.get('State', state_id)
-    temp.delete()
-    return '{}'
+    if temp is None:
+        abort(404)
+    else:
+        temp.delete()
+        return '{}'
     #storage.get and obj.delete()
     #status 200 default (look into response object)
 
 @app_views.route('/states', methods=['POST'])
 def create_state():
     """ creates a new state object. """
+    
     #pass dict as kwargs to init method and save.
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
