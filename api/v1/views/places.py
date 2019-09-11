@@ -31,8 +31,4 @@ def api_searchPlaces():
             place for place in places
             if amenities - set(am.id for am in place.amenities) == set()
         ]
-    print(places[0].to_dict())
-    return '[' + ','.join(
-        json.dumps(place.to_dict())
-        for place in places
-    ) + ']'
+    return json.dumps([place.to_dict() for place in places])
