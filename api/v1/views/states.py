@@ -31,8 +31,6 @@ def delete_state(state_id):
     else:
         temp.delete()
         return '{}'
-    #storage.get and obj.delete()
-    #status 200 default (look into response object)
 
 @app_views.route('/states', methods=['POST'])
 def create_state():
@@ -47,7 +45,6 @@ def create_state():
     models.storage.save()
     return jsonify(state.to_dict())
 
-    #pass dict as kwargs to init method and save.
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
 def update(state_id):
