@@ -33,10 +33,16 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        reviews = relationship("Review", backref="place")
-        amenities = relationship("Amenity", secondary="place_amenity",
-                                 backref="place_amenities",
-                                 viewonly=False)
+
+        reviews = relationship(
+            "Review", back_populates="place",
+            cascade='all, delete-orphan')
+        user = relationship(
+            'User', back_populates='places')
+        amenities = relationship(
+            "Amenity", secondary="place_amenity",
+            back_populates="place_amenities",viewonly=False)
+
     else:
         city_id = ""
         user_id = ""
@@ -49,10 +55,6 @@ class Place(BaseModel, Base):
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
-
-    def __init__(self, *args, **kwargs):
-        """initializes Place"""
-        super().__init__(*args, **kwargs)
 
     if models.storage_t != 'db':
         @property
