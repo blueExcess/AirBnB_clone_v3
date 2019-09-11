@@ -17,10 +17,10 @@ def get_state():
 @app_views.route('/states/<state_id>', methods=['GET'])
 def get_state_id(state_id):
     """ retreive single state matching ID and return in JSON """
-    ret =  json.dumps(models.storage.get('State', state_id).to_dict())
-    if ret is None:
+    state = models.storage.get('State', state_id)
+    if state is None:
         abort(404)
-    return ret
+    return jsonify(state.to_dict())
 
 @app_views.route('/states/<state_id>', methods=['DELETE'])
 def delete_state(state_id):
