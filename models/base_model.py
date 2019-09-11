@@ -9,6 +9,7 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm.properties import RelationshipProperty
 import uuid
 
 time = "%Y-%m-%dT%H:%M:%S.%f"
@@ -70,7 +71,11 @@ class BaseModel:
                 continue
             elif key == '_sa_instance_state':
                 continue
-            elif not isinstance(value, BaseModel):
+            elif not (
+                hasattr(type(self), key) and
+                hasattr(getattr(type(self), key), 'prop') and
+                isinstance(getattr(type(self), key).prop, RelationshipProperty)
+            ):
                 ret[key] = value
         return ret
 
