@@ -60,17 +60,19 @@ class BaseModel:
 
     def to_dict(self, internal=False):
         """returns a dictionary containing all keys/values of the instance"""
-        new_dict = self.__dict__.copy()
-        if "created_at" in new_dict:
-            new_dict["created_at"] = new_dict["created_at"].strftime(time)
-        if "updated_at" in new_dict:
-            new_dict["updated_at"] = new_dict["updated_at"].strftime(time)
-        new_dict["__class__"] = self.__class__.__name__
-        if "_sa_instance_state" in new_dict:
-            del new_dict["_sa_instance_state"]
-        if not internal and 'password' in new_dict:
-            del new_dict['password']
-        return new_dict
+        ret = {}
+        for key, value in self.__dict__.items():
+            if key == 'created_at':
+                ret['created_at'] = value.strftime(time)
+            elif key == 'updated_at':
+                ret['updated_at'] = value.strftime(time)
+            elif key == 'password' and not internal:
+                continue
+            elif key == '_sa_instance_state':
+                continue
+            elif not isinstance(value, BaseModel):
+                ret[key] = value
+        return ret
 
     def delete(self):
         """delete the current instance from the storage"""
