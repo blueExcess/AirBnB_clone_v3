@@ -13,6 +13,8 @@ def get_state():
     """ retreive list of states and convert to JSON """
     return json.dumps([state.to_dict()
                        for state in models.storage.all('State').values()])
+# Replace json.dumps with jsonify above?
+
 
 @app_views.route('/states/<state_id>', methods=['GET'])
 def get_state_id(state_id):
@@ -21,6 +23,7 @@ def get_state_id(state_id):
     if state is None:
         abort(404)
     return jsonify(state.to_dict())
+
 
 @app_views.route('/states/<state_id>', methods=['DELETE'])
 def delete_state(state_id):
@@ -31,6 +34,7 @@ def delete_state(state_id):
     else:
         temp.delete()
         return '{}'
+
 
 @app_views.route('/states', methods=['POST'])
 def create_state():
