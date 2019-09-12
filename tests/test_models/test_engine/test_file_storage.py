@@ -128,6 +128,20 @@ class TestFileStorage(unittest.TestCase):
             found = models.storage.get(type(obj), obj.id)
             self.assertIsNone(found)
 
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """test retrieving single objects"""
+        objects = self.populate()
+        for obj in objects:
+            found = models.storage.get(type(obj), obj.id)
+            self.assertIs(found, obj)
+        for obj in objects:
+            obj.delete()
+            found = models.storage.get(type(obj), obj.id)
+            self.assertIsNone(found)
+
+
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
         """ test counting objects.
