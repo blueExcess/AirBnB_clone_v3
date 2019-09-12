@@ -18,7 +18,7 @@ def api_status():
 def api_countModels():
     """Show the counts of each model type in storage"""
     counts = {
-        name.lower(): models.storage.count(name)
+        cls.__tablename__: models.storage.count(name)
         for name, cls in models.classes.items()
         if issubclass(cls, models.base_model.Base)
     }
