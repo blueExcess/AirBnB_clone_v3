@@ -57,7 +57,7 @@ def create_city(state_id):
 
 
 @app_views.route('/cities/<city_id>', methods=['PUT'])
-def update(city_id):
+def update_city(city_id):
     """ update specific city object with given information. """
     body = request.get_json(silent=True)
     if body is None:

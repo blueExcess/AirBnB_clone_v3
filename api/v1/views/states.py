@@ -51,7 +51,7 @@ def create_state():
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
-def update(state_id):
+def update_state(state_id):
     """ update specific state object with new information. """
     body = request.get_json(silent=True)
     if body is None:
