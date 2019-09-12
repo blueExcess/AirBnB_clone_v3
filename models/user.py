@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """ holds class User"""
 
 
@@ -33,6 +33,9 @@ class User(BaseModel, Base):
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
+        if 'id' in kwargs and 'password' in kwargs:
+            super().__setattr__('password', kwargs['password'])
+            del kwargs['password']
         super().__init__(*args, **kwargs)
 
     def __setattr__(self, name, value):
