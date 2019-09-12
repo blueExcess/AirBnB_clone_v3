@@ -13,9 +13,7 @@ def get_cities_belonging_to_states(state_id):
     state = models.storage.get('State', state_id)
     if state is None:
         abort(404)
-    return jsonify([
-        city.to_dict() for city in models.storage.all('City').values()
-        ])
+    return jsonify([city.to_dict() for city in state.cities])
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'])
@@ -49,7 +47,8 @@ def create_city(state_id):
     state = models.storage.get('State', state_id)
     if state is None:
         abort(404)
-    city = models.city.City(state_id=state_id, **body)
+    city = models.city.City(**body)
+    city.state_id = state_id
     models.storage.new(city)
     models.storage.save()
     return make_response(jsonify(city.to_dict()), 201)
