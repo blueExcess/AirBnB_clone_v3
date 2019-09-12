@@ -131,4 +131,3 @@ class TestDBStorage(unittest.TestCase):
             models.storage.save()
             count -= 1
             self.assertEqual(models.storage.count(), count)
-        self.assertIsNone(objects)
