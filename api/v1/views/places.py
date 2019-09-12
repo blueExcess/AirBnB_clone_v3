@@ -61,7 +61,7 @@ def api_addPlaceToCity(city_id):
     return flask.make_response(flask.jsonify(place.to_dict()), 201)
 
 
-@app_views('/places/<place_id>', methods=('PUT',))
+@app_views.route('/places/<place_id>', methods=('PUT',))
 def api_updatePlace(place_id):
     """Update an existing place"""
     place = models.storage.get('Place', place_id)
