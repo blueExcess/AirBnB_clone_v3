@@ -165,12 +165,10 @@ class TestFileStorage(unittest.TestCase):
         models.storage = models.engine.file_storage.FileStorage()
         models.storage.reload()
         objects = self.populate()
-        count = 6
-        print("count: ", count)
+        count = 13
         self.assertEqual(6, len(objects))
         for obj in objects:
             obj.delete()
             models.storage.save()
             count -= 1
-            print("count: ",  count)
             self.assertEqual(models.storage.count(), count)
