@@ -121,13 +121,14 @@ class TestDBStorage(unittest.TestCase):
         """ test counting objects.
         Start with 6 and delete one then check repetedly until 0. """
         models.storage.close()
-        models.storage.reload()
         models.storage = models.engine.db_storage.DBStorage()
+        models.storage.reload()
         objects = self.populate()
         count = 6
         self.assertEqual(6, len(objects))
         for obj in objects:
             obj.delete()
+            models.storage.save()
             count -= 1
-            self.assertEqual(len(objects), count)
+            self.assertEqual(models.storage.count(), count)
         self.assertIsNone(objects)
