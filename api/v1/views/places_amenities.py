@@ -4,7 +4,6 @@
 
 from api.v1.views import app_views
 import flask
-import json
 from models import storage
 import os
 
