@@ -3,7 +3,7 @@
 
 
 from api.v1.views import app_views
-from flask import Flask
+from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from models import storage
 from os import getenv
@@ -25,7 +25,7 @@ def closeStorageAfterRequest(error):
 @app.errorhandler(404)
 def error404(error):
     """Use a JSON rather than HTML response when a URL is not found"""
-    return '{"error": "Not found"}'
+    return make_response(jsonify(error="Not found"), 404)
 
 
 if __name__ == '__main__':
