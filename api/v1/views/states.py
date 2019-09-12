@@ -2,10 +2,9 @@
 """ states view api """
 
 from models.base_model import BaseModel
-from flask import Flask, abort, jsonify, request
+from flask import Flask, abort, jsonify, make_response, request
 from api.v1.views import app_views
 import models
-import json
 
 
 @app_views.route('/states', methods=['GET'])
@@ -33,7 +32,7 @@ def delete_state(state_id):
     if temp is None:
         abort(404)
     temp.delete()
-    storage.save()
+    models.storage.save()
     return jsonify({})
 
 
@@ -48,7 +47,7 @@ def create_state():
     state = models.state.State(**body)
     models.storage.new(state)
     models.storage.save()
-    return jsonify(state.to_dict())
+    return make_response(jsonify(state.to_dict()), 201)
 
 
 @app_views.route('/states/<state_id>', methods=['PUT'])
@@ -63,4 +62,5 @@ def update_state(state_id):
     for key, value in body.items():
         if key not in ('created_at', 'updated_at', 'id'):
             setattr(state, key, value)
+    state.save()
     return jsonify(state.to_dict())
