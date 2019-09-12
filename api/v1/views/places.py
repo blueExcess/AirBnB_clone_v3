@@ -44,9 +44,9 @@ def api_addPlaceToCity(city_id):
     city = models.storage.get('City', city_id)
     if city is None:
         flask.abort(404)
-    body = request.get_json(silent=True)
+    body = flask.request.get_json(silent=True)
     if body is None:
-        return flask.make_request(flask.jsonify(error='Not a JSON'), 400)
+        return flask.make_response(flask.jsonify(error='Not a JSON'), 400)
     if 'user_id' not in body:
         return flask.make_response(flask.jsonify(error='Missing user_id'), 400)
     user = models.storage.get('User', body['user_id'])
