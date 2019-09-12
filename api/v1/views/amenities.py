@@ -5,14 +5,15 @@ from models.base_model import BaseModel
 from flask import Flask, abort, jsonify, request
 from api.v1.views import app_views
 import models
-import json
 
 
 @app_views.route('/amenities', methods=['GET'])
 def get_amenities():
     """ retreive list of amenities and convert to JSON. """
-    return json.dumps([amenity.to_dict()
-                       for amenity in models.storage.all('Amenity').values()])
+    return jsonify([
+        amenity.to_dict()
+        for amenity in models.storage.all('Amenity').values()
+    ])
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET'])
@@ -30,10 +31,9 @@ def delete_amenity(amenity_id):
     temp = models.storage.get('Amenity', amenity_id)
     if temp is None:
         abort(404)
-    else:
-        temp.delete()
-        storage.save()
-        return '{}'
+    temp.delete()
+    models.storage.save()
+    return jsonify({})
 
 
 @app_views.route('/amenities', methods=['POST'])
@@ -41,9 +41,9 @@ def create_amenity():
     """ create a new amenity object. """
     body = request.get_json(silent=True)
     if body is None:
-        abort(400, '{"error": "Not a JSON"}')
+        abort(400, jsonify(error="Not a JSON"))
     if 'name' not in body:
-        abort(400, '{"error": "Missing name"}')
+        abort(400, jsonify(error="Missing name"))
     amenity = models.amenity.Amenity(**body)
     models.storage.new(amenity)
     models.storage.save()
@@ -61,4 +61,5 @@ def update_amenity(amenity_id):
     for key, value in body.items():
         if key not in ('id', 'created_at', 'updated_at'):
             setattr(state, key, value)
+    amenity.save()
     return jsonify(amenity.to_dict())
