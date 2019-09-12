@@ -129,7 +129,7 @@ class TestFileStorage(unittest.TestCase):
             self.assertIsNone(found)
 
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """test retrieving single objects"""
         objects = self.populate()
