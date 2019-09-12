@@ -13,7 +13,7 @@ def api_searchPlaces():
     """Search through places"""
     body = flask.request.get_json(silent=True)
     if body is None:
-        flask.abort(400)
+        return flask.make_response(flask.jsonify(error="Not a JSON"), 400)
     places = models.storage.all('Place').values()
     if 'states' in body and len(body['states']) > 0:
         places = [
@@ -31,4 +31,4 @@ def api_searchPlaces():
             place for place in places
             if amenities - set(am.id for am in place.amenities) == set()
         ]
-    return json.dumps([place.to_dict() for place in places])
+    return flask.jsonify([place.to_dict() for place in places])
