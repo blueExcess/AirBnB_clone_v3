@@ -36,7 +36,10 @@ def api_removeAmenityFromPlace(place_id, amenity_id):
     return flask.jsonify({})
 
 
-@app_views.route('/places/<place_id>/amenities/<amenity_id>', method=('POST',))
+@app_views.route(
+    '/places/<place_id>/amenities/<amenity_id>',
+    methods=('POST',)
+)
 def api_addAmenityToPlace(place_id, amenity_id):
     """associate a new amenity with a place"""
     place = storage.get('Place', place_id)
