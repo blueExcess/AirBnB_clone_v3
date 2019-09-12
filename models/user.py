@@ -27,7 +27,7 @@ class User(BaseModel, Base):
             cascade='all, delete-orphan')
     else:
         email = ""
-        _password = ""
+        password = ""
         first_name = ""
         last_name = ""
 
