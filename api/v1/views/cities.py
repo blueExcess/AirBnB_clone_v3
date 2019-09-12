@@ -16,7 +16,8 @@ def get_city():
         abort(404)
     return json.dumps([city.to_dict() for city in state.cities])
 
-# Unsure about above code
+# Getting error:
+# TypeError: get_city() got an unexpected keyword argument 'state_id'
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'])
@@ -36,7 +37,9 @@ def delete_city(city_id):
         abort(404)
     else:
         city.delete()
+        storage.save()
         return '{}'
+# verify this method works properly
 
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'])

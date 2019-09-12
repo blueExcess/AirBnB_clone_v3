@@ -33,7 +33,9 @@ def delete_state(state_id):
         abort(404)
     else:
         temp.delete()
+        storage.save()
         return '{}'
+# verify this method works properly
 
 
 @app_views.route('/states', methods=['POST'])
