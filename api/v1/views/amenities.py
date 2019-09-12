@@ -47,7 +47,7 @@ def create_amenity():
     amenity = models.amenity.Amenity(**body)
     models.storage.new(amenity)
     models.storage.save()
-    return jsonify(amenity.to_dict())
+    return make_response(jsonify(amenity.to_dict()), 201)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'])
