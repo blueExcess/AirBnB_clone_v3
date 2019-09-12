@@ -33,6 +33,7 @@ def delete_state(state_id):
         abort(404)
     else:
         temp.delete()
+        storage.save()
         return '{}'
 
 
