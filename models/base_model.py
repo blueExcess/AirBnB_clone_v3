@@ -77,6 +77,7 @@ class BaseModel:
                 isinstance(getattr(type(self), key).prop, RelationshipProperty)
             ):
                 ret[key] = value
+        ret['__class__'] = type(self).__name__
         return ret
 
     def delete(self):
