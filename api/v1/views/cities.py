@@ -39,7 +39,7 @@ def delete_city(city_id):
         city.delete()
         storage.save()
         return '{}'
-# Not sure if this one worked
+# verify this method works properly
 
 
 @app_views.route('/states/<state_id>/cities', methods=['POST'])
