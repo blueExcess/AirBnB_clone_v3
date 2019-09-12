@@ -3,7 +3,7 @@
 
 
 from api.v1.views import app_views
-import json
+import flask
 import models
 import models.base_model
 
@@ -11,7 +11,7 @@ import models.base_model
 @app_views.route('/status')
 def api_status():
     """Report that the API is available"""
-    return '{"status": "OK"}'
+    return flask.jsonify(status='OK')
 
 
 @app_views.route('/stats')
@@ -22,4 +22,4 @@ def api_countModels():
         for name, cls in models.classes.items()
         if issubclass(cls, models.base_model.Base)
     }
-    return json.dumps(counts)
+    return flask.jsonify(counts)
