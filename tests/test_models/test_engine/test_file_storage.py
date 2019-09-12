@@ -70,6 +70,23 @@ test_file_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
+    def populate(self):
+        """Add one of each class to the database"""
+        state = State(name='Connecticut')
+        state.save()
+        city = City(state_id=state.id, name='New Haven')
+        city.save()
+        amenity = Amenity(name='Wi-Fi')
+        amenity.save()
+        user = User(email='postmaster@example.com', password='password')
+        user.save()
+        place = Place(city_id=city.id, user_id=user.id, name='Big Blue House')
+        place.amenities.append(amenity)
+        place.save()
+        review = Review(place_id=place.id, user_id=user.id, text='Bad.')
+        review.save()
+        return [review, place, user, amenity, city, state]
+
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
@@ -128,7 +145,6 @@ class TestFileStorage(unittest.TestCase):
             found = models.storage.get(type(obj), obj.id)
             self.assertIsNone(found)
 
-
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get(self):
         """test retrieving single objects"""
@@ -140,7 +156,6 @@ class TestFileStorage(unittest.TestCase):
             obj.delete()
             found = models.storage.get(type(obj), obj.id)
             self.assertIsNone(found)
-
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
