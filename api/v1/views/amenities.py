@@ -55,12 +55,12 @@ def update_amenity(amenity_id):
     """ update specific amenity object with new information. """
     body = request.get_json(silent=True)
     if body is None:
-        abort(400, jsonify(error= "Not a JSON"))
+        abort(400, jsonify(error="Not a JSON"))
     amenity = models.storage.get('Amenity', amenity_id)
     if amenity is None:
         abort(404)
     for key, value in body.items():
         if key not in ('id', 'created_at', 'updated_at'):
-            setattr(state, key, value)
+            setattr(amenity, key, value)
     amenity.save()
     return jsonify(amenity.to_dict())
