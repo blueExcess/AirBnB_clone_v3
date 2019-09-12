@@ -49,6 +49,7 @@ def create_amenity():
     models.storage.save()
     return jsonify(amenity.to_dict())
 
+
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'])
 def update_amenity(amenity_id):
     """ update specific amenity object with new information. """
