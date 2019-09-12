@@ -14,7 +14,9 @@ def get_city():
     state = models.storage.get('State', state_id)
     if state is None:
         abort(404)
-    return json.dumps([city.to_dict() for city in state.cities])
+    return jsonify([
+        city.to_dict() for city in models.storage.all('City').values()
+        ])
 
 # Getting error:
 # TypeError: get_city() got an unexpected keyword argument 'state_id'
@@ -35,10 +37,9 @@ def delete_city(city_id):
     city = models.storage.get('City', city_id)
     if city is None:
         abort(404)
-    else:
-        city.delete()
-        storage.save()
-        return '{}'
+    city.delete()
+    storage.save()
+    return jsonify({})
 # verify this method works properly
 
 
@@ -47,9 +48,9 @@ def create_city(state_id):
     """ create city attached to given state. """
     body = request.get_json(silent=True)
     if body is None:
-        abort(400, '{"error": "Not a JSON"}')
+        abort(400, jsonify(error="Not a JSON"))
     if 'name' not in body:
-        abort(400, '{"error": "Missing name"}')
+        abort(400, jsonify(error="Missing name"))
     state = models.storage.get('State', state_id)
     if state is None:
         abort(404)
@@ -64,7 +65,7 @@ def update_city(city_id):
     """ update specific city object with given information. """
     body = request.get_json(silent=True)
     if body is None:
-        abort(400, '{"error": "Not a JSON"}')
+        abort(400, jsonify("Not a JSON"))
     city = models.storage.get('City', city_id)
     if city is None:
         abort(404)
