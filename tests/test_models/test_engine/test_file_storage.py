@@ -70,6 +70,23 @@ test_file_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
+    def populate(self):
+        """Add one of each class to the database"""
+        state = State(name='Connecticut')
+        state.save()
+        city = City(state_id=state.id, name='New Haven')
+        city.save()
+        amenity = Amenity(name='Wi-Fi')
+        amenity.save()
+        user = User(email='postmaster@example.com', password='password')
+        user.save()
+        place = Place(city_id=city.id, user_id=user.id, name='Big Blue House')
+        place.amenities.append(amenity)
+        place.save()
+        review = Review(place_id=place.id, user_id=user.id, text='Bad.')
+        review.save()
+        return [review, place, user, amenity, city, state]
+
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_all_returns_dict(self):
         """Test that all returns the FileStorage.__objects attr"""
@@ -127,3 +144,45 @@ class TestFileStorage(unittest.TestCase):
             obj.delete()
             found = models.storage.get(type(obj), obj.id)
             self.assertIsNone(found)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """test retrieving single objects"""
+        objects = self.populate()
+        for obj in objects:
+            found = models.storage.get(type(obj), obj.id)
+            self.assertIs(found, obj)
+        for obj in objects:
+            obj.delete()
+            found = models.storage.get(type(obj), obj.id)
+            self.assertIsNone(found)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """ test counting objects.
+        Start with 6 and delete one then check repetedly until 0. """
+        models.storage.close()
+        models.storage = models.engine.file_storage.FileStorage()
+        models.storage.reload()
+        objects = self.populate()
+        count = 13
+        self.assertEqual(6, len(objects))
+        for obj in objects:
+            obj.delete()
+            models.storage.save()
+            count -= 1
+            self.assertEqual(models.storage.count(), count)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_bad(self):
+        """ give count extra arguments. """
+        # with self.assertRaises(TypeError):
+        models.storage.count(2)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_two_arg(self):
+        """ give count extra arguments. """
+        objects = self.populate()
+        state = objects[0]
+        with self.assertRaises(TypeError):
+            models.storage.count(state, "idhere")
