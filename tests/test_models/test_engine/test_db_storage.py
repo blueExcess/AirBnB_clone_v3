@@ -131,3 +131,9 @@ class TestDBStorage(unittest.TestCase):
             models.storage.save()
             count -= 1
             self.assertEqual(models.storage.count(), count)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_bad(self):
+        """ give count extra arguments. """
+        with self.assertRaises(TypeError):
+            models.storage.count("2")
