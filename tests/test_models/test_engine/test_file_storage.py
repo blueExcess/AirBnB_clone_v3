@@ -190,13 +190,12 @@ class TestFileStorage(unittest.TestCase):
         models.storage = models.engine.file_storage.FileStorage()
         models.storage.reload()
         objects = self.populate()
-        count = 13
         self.assertEqual(6, len(objects))
         for obj in objects:
             obj.delete()
             models.storage.save()
-            count -= 1
-            self.assertEqual(models.storage.count(), count)
+            objects.pop(0)
+            self.assertEqual(models.storage.count(), len(objects))
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_bad(self):
