@@ -168,6 +168,21 @@ class TestFileStorage(unittest.TestCase):
             models.storage.get(type(obj[0]), obj[0].id, obj[1].id)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get_none(self):
+        """ test passing argument None to all positions in get. """
+        models.storage.close()
+        models.storage = models.engine.file_storage.FileStorage()
+        models.storage.reload()
+        obj = self.populate()
+
+        found = models.storage.get(type(obj[0]), None)
+        self.assertEqual(found, None)
+        found = models.storage.get('', obj[0].id)
+        self.assertEqual(found, None)
+        found = models.storage.get('', '')
+        self.assertEqual(found, None)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
         """ test counting objects.
         Start with 6 and delete one then check repetedly until 0. """
