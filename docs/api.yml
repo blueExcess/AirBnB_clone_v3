@@ -4,36 +4,77 @@ info:
   version: 0.4
 
 basePath: /api/v1
-schemes: http
+schemes:
+  - http
 
 definitions:
   Amenity:
     type: object
+    required:
+      - name
     properties:
       name:
         type: string
+  BaseModel:
+    type: object
+    properties:
+      id:
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+      created_at:
+        type: string
+      updated_at:
+        type: string
   City:
     type: object
+    required:
+      - name
     properties:
       name:
         type: string
       state_id:
         type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
   Place:
     type: object
+    required:
+      - name
+      - user_id
     properties:
       name:
         type: string
       description:
         type: string
+      city_id:
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
       number_rooms:
         type: integer
       number_bathrooms:
         type: integer
       price_by_night:
         type: integer
+      user_id:
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+  Review:
+    type: object
+    required:
+      - text
+      - user_id
+    properties:
+      place_id:
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+      text:
+        type: string
+      user_id:
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
   State:
     type: object
+    required:
+      - name
     properties:
       name:
         type: string
@@ -44,6 +85,7 @@ definitions:
         type: string
       password:
         type: string
+        format: password
 
 paths:
   /states:
@@ -60,13 +102,21 @@ paths:
               $ref: '#/definitions/State'
     post:
       summary: Create a new state object
+      parameters:
+        - name: state
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/State'
       tags:
         - states
       responses:
         201:
           description: state successfully created
           schema:
-            $ref: '#/definitions/State'
+            allOf:
+              - $ref: '#/definitions/BaseModel'
+              - $ref: '#/definitions/State'
         400:
           description: request body not JSON or name not given
 
@@ -75,6 +125,8 @@ paths:
       - name: state_id
         in: path
         required: true
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     delete:
       summary: Delete a state by ID
       tags:
@@ -116,6 +168,8 @@ paths:
       - name: state_id
         in: path
         required: true
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     get:
       summary: Get all cities in a state
       tags:
@@ -150,6 +204,8 @@ paths:
       - name: city_id
         in: path
         required: true
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     delete:
       summary: Delete a city by ID
       tags:
@@ -215,6 +271,8 @@ paths:
       - name: amenity_id
         in: path
         required: true
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     delete:
       summary: Delete an amenity object by ID
       tags:
@@ -280,6 +338,8 @@ paths:
       - name: user_id
         in: path
         required: true
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     delete:
       summary: Delete a user object by ID
       tags:
@@ -321,6 +381,8 @@ paths:
       - name: city_id
         in: path
         required: true
+        type: string
+        pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
     get:
       summary: List all places in a city
       tags:
