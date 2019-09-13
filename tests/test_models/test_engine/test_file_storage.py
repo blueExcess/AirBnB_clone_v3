@@ -176,8 +176,10 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_bad(self):
         """ give count extra arguments. """
-        # with self.assertRaises(TypeError):
-        models.storage.count(2)
+        objects = self.populate()
+        state = objects[0]
+        with self.assertRaises(TypeError):
+            models.storage.count(state, "someid")
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_two_arg(self):
