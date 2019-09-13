@@ -58,7 +58,7 @@ def update_amenity(amenity_id):
         abort(404)
     body = request.get_json(silent=True)
     if body is None:
-        abort(400, jsonify(error= "Not a JSON"))
+        abort(400, jsonify(error="Not a JSON"))
     for key, value in body.items():
         if key not in ('id', 'created_at', 'updated_at'):
             setattr(amenity, key, value)
