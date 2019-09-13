@@ -158,6 +158,16 @@ class TestFileStorage(unittest.TestCase):
             self.assertIsNone(found)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get_too_many_args(self):
+        """ test get with too many arguments. """
+        models.storage.close()
+        models.storage = models.engine.file_storage.FileStorage()
+        models.storage.reload()
+        obj = self.populate()
+        with self.assertRaises(TypeError):
+            models.storage.get(type(obj[0]), obj[0].id, obj[1].id)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count(self):
         """ test counting objects.
         Start with 6 and delete one then check repetedly until 0. """
@@ -176,8 +186,10 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_bad(self):
         """ give count extra arguments. """
-        # with self.assertRaises(TypeError):
-        models.storage.count(2)
+        objects = self.populate()
+        state = objects[0]
+        with self.assertRaises(TypeError):
+            models.storage.count(state, "someid")
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_two_arg(self):
