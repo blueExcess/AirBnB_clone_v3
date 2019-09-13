@@ -127,6 +127,21 @@ class TestDBStorage(unittest.TestCase):
             models.storage.get(type(obj[0]), obj[0].id, obj[1].id)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_none(self):
+        """ pass none arguments to get. """
+        models.storage.close()
+        models.storage = models.engine.db_storage.DBStorage()
+        models.storage.reload()
+        obj = self.populate()
+
+        found = models.storage.get(type(obj[0]), None)
+        self.assertEqual(found, None)
+        with self.assertRaises(KeyError):
+            models.storage.get(None, obj[0].id)
+        with self.assertRaises(KeyError):
+            models.storage.get(None, None)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
         """ test counting objects.
         Start with 6 and delete one then check repetedly until 0. """
